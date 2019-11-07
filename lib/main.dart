@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrioshop/screens/product_details_screen.dart';
 import 'package:nutrioshop/screens/products_overview_screen.dart';
 
 main() {
@@ -10,10 +11,18 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Nutrio shop',
+      // theme: ThemeData.dark(
+        
+      // ),
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
+        accentColor: Colors.tealAccent,
+        fontFamily: 'Lato'
       ),
-      home: ProductsOverviewScreen()
+      home: ProductsOverviewScreen(),
+      routes: {
+        ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen()
+      },
     );
   }
 }
