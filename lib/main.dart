@@ -11,7 +11,9 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Nutrio shop',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
+        accentColor: Colors.tealAccent,
+        fontFamily: 'Lato'
       ),
       home: ProductsOverviewScreen()
     );
