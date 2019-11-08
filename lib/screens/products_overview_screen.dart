@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nutrioshop/widgets/product.dart';
+import 'package:nutrioshop/models/product.dart';
 import 'package:nutrioshop/widgets/product_item.dart';
 
 import '../dumm_data.dart';
