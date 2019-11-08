@@ -1,4 +1,4 @@
-import 'package:nutrioshop/widgets/product.dart';
+import 'models/product.dart';
 
 final dummyProducts = [
     Product(
