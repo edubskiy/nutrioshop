@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nutrioshop/models/product.dart';
 import 'package:nutrioshop/providers/products.dart';
 import 'package:nutrioshop/widgets/product_item.dart';
 import 'package:provider/provider.dart';
@@ -8,15 +7,14 @@ class ProductsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Product> products = Provider.of<Products>(context).items;
+    final products = Provider.of<Products>(context).items;
     
     return GridView.builder(
       padding: const EdgeInsets.all(10.0),
       itemCount: products.length,
-      itemBuilder: (ctx, i) => ProductItem(
-        id: products[i].id,
-        title: products[i].title,
-        imageUrl: products[i].imageUrl,
+      itemBuilder: (ctx, i) => ChangeNotifierProvider(
+        builder: (c) => products[i],
+        child: ProductItem(),
       ),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
