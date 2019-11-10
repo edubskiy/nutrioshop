@@ -25,7 +25,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               if (selectedValue == FilterOptions.Favorites) {
                 setState(() => _showFavoritesOnly = true)
               } else {
-                setState(() => _showFavoritesOnly = true)
+                setState(() => _showFavoritesOnly = false)
               }
             },
             icon: Icon(Icons.more_vert),
