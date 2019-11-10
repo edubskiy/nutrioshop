@@ -4,16 +4,22 @@ import 'package:nutrioshop/widgets/product_item.dart';
 import 'package:provider/provider.dart';
 
 class ProductsGrid extends StatelessWidget {
+  final bool _showFavoritesOnly;
+
+  ProductsGrid(this._showFavoritesOnly);
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<Products>(context).items;
+    final productsProvider = Provider.of<Products>(context, listen: false);
+    final products = _showFavoritesOnly 
+      ? productsProvider.getFavoritesOnly()
+      : productsProvider.items;
     
     return GridView.builder(
       padding: const EdgeInsets.all(10.0),
       itemCount: products.length,
-      itemBuilder: (ctx, i) => ChangeNotifierProvider(
-        builder: (c) => products[i],
+      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+        value: products[i],
         child: ProductItem(),
       ),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
