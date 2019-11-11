@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:nutrioshop/providers/cart.dart';
+import 'package:nutrioshop/widgets/badge.dart';
 import 'package:nutrioshop/widgets/products_grid.dart';
+import 'package:provider/provider.dart';
 
 enum FilterOptions {
   Favorites,
@@ -39,7 +42,16 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                 value: FilterOptions.All
               )
             ],
-          )
+          ),
+          Consumer<Cart>(
+            builder: (_, cart, anyCartChild) => Badge(
+              child: anyCartChild,
+              value: cart.itemCount.toString(),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart), 
+              onPressed: () {},
+            ),),
         ],
       ),
       body: ProductsGrid(_showFavoritesOnly),
