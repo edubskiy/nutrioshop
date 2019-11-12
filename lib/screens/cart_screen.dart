@@ -23,7 +23,6 @@ class CartScreen extends StatelessWidget {
                 children: <Widget>[
                   Text('Total', style: TextStyle(fontSize: 20)),
                   Spacer(),
-                  // SizedBox(width: 10,),
                   Chip(
                     label: Text(
                       '\$${cart.totalAmount}', // cartProvider.totalAmount.toString()
@@ -46,14 +45,13 @@ class CartScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: cart.itemCount,
               itemBuilder: (ctx, i) {
-                print('print items:');
-                print(cart.items);
                 final ci = cart.items.values.toList()[i];
                   return CartItem(
                     id: ci.id,
+                    productId: cart.items.keys.toList()[i],
                     price: ci.price,
                     title: ci.title,
-                    quantity: ci.quantity
+                    quantity: ci.quantity,
                   );
               },
             ),
