@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrioshop/providers/cart.dart';
+import 'package:nutrioshop/providers/orders.dart';
 import 'package:nutrioshop/providers/products.dart';
 import 'package:nutrioshop/screens/cart_screen.dart';
 import 'package:nutrioshop/screens/product_details_screen.dart';
@@ -17,6 +18,7 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: Products()),
         ChangeNotifierProvider.value(value: Cart()),
+        ChangeNotifierProvider.value(value: Orders()),
       ],
       child: MaterialApp(
         title: 'Nutrio shop',
