@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nutrioshop/providers/orders.dart' as OrderProvider;
-import 'package:intl/';
 
 class OrderItem extends StatelessWidget {
   final OrderProvider.OrderItem order;

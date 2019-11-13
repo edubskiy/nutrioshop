@@ -4,6 +4,7 @@ import 'package:nutrioshop/widgets/order_item.dart';
 import 'package:provider/provider.dart';
 
 class OrdersScreen extends StatelessWidget {
+  static const routeName = '/orders';
 
   @override
   Widget build(BuildContext context) {

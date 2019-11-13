@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrioshop/providers/cart.dart';
 import 'package:nutrioshop/screens/cart_screen.dart';
+import 'package:nutrioshop/widgets/app_drawer.dart';
 import 'package:nutrioshop/widgets/badge.dart';
 import 'package:nutrioshop/widgets/products_grid.dart';
 import 'package:provider/provider.dart';
@@ -21,8 +22,10 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   @override
   Widget build(BuildContext context) {  
     return Scaffold(
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: Text('Nutrio shop'),
+        
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) => {
