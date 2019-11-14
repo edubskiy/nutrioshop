@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nutrioshop/manage/widgets/manage_products_item.dart';
 import 'package:nutrioshop/providers/products.dart';
 import 'package:nutrioshop/widgets/app_drawer.dart';
-import 'package:nutrioshop/widgets/manage/manage_products_item.dart';
 import 'package:provider/provider.dart';
 
 class ManageProductsScreen extends StatelessWidget {

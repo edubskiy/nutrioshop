@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nutrioshop/manage/screens/manage_products_screen.dart';
 import 'package:nutrioshop/screens/orders_screen.dart';
-import 'package:nutrioshop/widgets/manage/manage_products_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   Widget buildListTile(String title, IconData icon, Function onTap) {

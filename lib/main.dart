@@ -6,8 +6,9 @@ import 'package:nutrioshop/screens/cart_screen.dart';
 import 'package:nutrioshop/screens/orders_screen.dart';
 import 'package:nutrioshop/screens/product_details_screen.dart';
 import 'package:nutrioshop/screens/products_overview_screen.dart';
-import 'package:nutrioshop/widgets/manage/manage_products_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'manage/screens/manage_products_screen.dart';
 
 main() {
   runApp(App());
