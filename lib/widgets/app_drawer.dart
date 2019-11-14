@@ -22,28 +22,21 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: <Widget>[
-          Container(
-            height: 120,
-            width: double.infinity,
-            padding: EdgeInsets.all(120),
-            alignment: Alignment.centerLeft,
-            color: Colors.black,
-            child: Text(
-              'Nutrio Shop',
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 30,
-                color: Theme.of(context).primaryColor
-              ),
-            ),
+          AppBar(
+            title: Text('Nutrio Shop'),
+            automaticallyImplyLeading: false,
           ),
-          SizedBox(height: 20,),
-          buildListTile('Orders', Icons.shopping_cart, () {
-            Navigator.of(context).pushNamed(OrdersScreen.routeName);
-          }),
-          // buildListTile('Filters', Icons.settings, () {
-          //   Navigator.of(context).pushReplacementNamed(FiltersScreen.routeName);
-          // }),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.shop),
+            title: Text('Catalog'),
+            onTap: () => Navigator.of(context).pushReplacementNamed('/'),
+          ),
+          ListTile(
+            leading: Icon(Icons.payment),
+            title: Text('Orders'),
+            onTap: () => Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName),
+          )
         ],
       ),
     );
