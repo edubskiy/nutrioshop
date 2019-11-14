@@ -6,6 +6,7 @@ import 'package:nutrioshop/screens/cart_screen.dart';
 import 'package:nutrioshop/screens/orders_screen.dart';
 import 'package:nutrioshop/screens/product_details_screen.dart';
 import 'package:nutrioshop/screens/products_overview_screen.dart';
+import 'package:nutrioshop/widgets/manage/manage_products_screen.dart';
 import 'package:provider/provider.dart';
 
 main() {
@@ -33,7 +34,8 @@ class App extends StatelessWidget {
         routes: {
           ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
-          OrdersScreen.routeName: (ctx) => OrdersScreen()
+          OrdersScreen.routeName: (ctx) => OrdersScreen(),
+          ManageProductsScreen.routeName: (ctx) => ManageProductsScreen()
         },
       )
     );
