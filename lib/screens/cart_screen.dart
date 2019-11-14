@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrioshop/providers/cart.dart' show Cart;
+import 'package:nutrioshop/providers/orders.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrioshop/widgets/cart_item.dart';
 
@@ -9,6 +10,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
+    final order = Provider.of<Orders>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(title: Text('Your cart'),),
@@ -25,7 +27,7 @@ class CartScreen extends StatelessWidget {
                   Spacer(),
                   Chip(
                     label: Text(
-                      '\$${cart.totalAmount}', // cartProvider.totalAmount.toString()
+                      '\$${cart.totalAmount.toStringAsFixed(2)}', // cartProvider.totalAmount.toString()
                       style: TextStyle(
                         color: Theme.of(context).primaryTextTheme.title.color,
                       ),
@@ -34,7 +36,13 @@ class CartScreen extends StatelessWidget {
                   ),
                   FlatButton(
                     child: Text('ORDER NOW'), 
-                    onPressed: () {},
+                    onPressed: () {
+                      order.addOrder(
+                        cart.items.values.toList(), 
+                        cart.totalAmount
+                      );
+                      cart.clear();
+                    },
                     textColor: Theme.of(context).primaryColor,
                   )
               ],),
