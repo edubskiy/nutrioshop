@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrioshop/manage/screens/manage_edit_product_screen.dart';
 import 'package:nutrioshop/providers/cart.dart';
 import 'package:nutrioshop/providers/orders.dart';
 import 'package:nutrioshop/providers/products.dart';
@@ -36,7 +37,8 @@ class App extends StatelessWidget {
           ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
           OrdersScreen.routeName: (ctx) => OrdersScreen(),
-          ManageProductsScreen.routeName: (ctx) => ManageProductsScreen()
+          ManageProductsScreen.routeName: (ctx) => ManageProductsScreen(),
+          ManageEditProductScreen.routeName: (ctx) => ManageEditProductScreen(),
         },
       )
     );
