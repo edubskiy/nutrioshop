@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrioshop/manage/screens/manage_products_screen.dart';
 import 'package:nutrioshop/screens/orders_screen.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -36,6 +37,11 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.payment),
             title: Text('Orders'),
             onTap: () => Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName),
+          ),
+          ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Manage Products'),
+            onTap: () => Navigator.of(context).pushReplacementNamed(ManageProductsScreen.routeName),
           )
         ],
       ),
