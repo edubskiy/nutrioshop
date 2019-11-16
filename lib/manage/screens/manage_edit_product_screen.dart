@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrioshop/models/product.dart';
 
 class ManageEditProductScreen extends StatefulWidget {
   static const routeName = '/edit-products';
@@ -13,6 +14,14 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
   final _descriptionFocusNode = FocusNode();
   final _imageUrlFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
+  final _form = GlobalKey<FormState>();
+  Product _editedProduct = Product(
+      id: null,
+      title: '',
+      description: '',
+      imageUrl: '',
+      price: 0,
+      isFavorite: false);
 
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
@@ -26,16 +35,42 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
     _descriptionFocusNode.dispose();
     _imageUrlFocusNode.removeListener(_updateImageUrl);
     _imageUrlFocusNode.dispose();
-    
+
     super.dispose();
   }
 
   _updateImageUrl() {
     if ( ! _imageUrlFocusNode.hasFocus) {
+      var imageURL = _imageUrlController.text;
+      if (getImageValidateError(imageURL) != null) return;
+
       // it is a bit of a hack: force update state to provide text of _imageUrlController
       // and update our image preview
       setState(() {});
     }
+  }
+
+  void _saveForm() {
+    final isValid = _form.currentState.validate();
+
+    if (!isValid) return;
+
+    _form.currentState.save();
+  }
+
+  String getImageValidateError(value) {
+    // var urlPattern = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/;
+    var urlPattern = r"(https?|ftp)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?";
+    var result = new RegExp(urlPattern, caseSensitive: false).firstMatch(value);
+
+    if (value.isEmpty) {
+      return 'Please provide a value';
+    }
+    if (result == null) {
+      return 'Please enter a valid image url';
+    }
+
+    return null;
   }
 
   @override
@@ -43,10 +78,17 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit product'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.check),
+            onPressed: _saveForm,
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
+          key: _form,
           child: ListView(
             children: <Widget>[
               TextFormField(
@@ -55,21 +97,72 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
                 },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please provide a value';
+                  }
+                  return null;
+                },
+                onSaved: (value) => {
+                  _editedProduct = Product(
+                      id: null,
+                      title: value,
+                      price: _editedProduct.price,
+                      description: _editedProduct.description,
+                      imageUrl: _editedProduct.imageUrl)
+                },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: InputDecoration(labelText: 'Price'),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
                 focusNode: _priceFocusNode,
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please provide a value';
+                  }
+                  if (double.tryParse(value) == null) {
+                    return 'Please enter a valid number';
+                  }
+                  if (double.parse(value) <= 0) {
+                    return 'Please enter a number greater than 0';
+                  }
+                  return null;
+                },
+                onSaved: (value) => {
+                  _editedProduct = Product(
+                      id: null,
+                      title: _editedProduct.title,
+                      price: double.parse(value),
+                      description: _editedProduct.description,
+                      imageUrl: _editedProduct.imageUrl)
+                },
               ),
               TextFormField(
                   decoration: InputDecoration(labelText: 'Description'),
                   maxLines: 3,
                   focusNode: _descriptionFocusNode,
-                  keyboardType: TextInputType.multiline),
+                  keyboardType: TextInputType.multiline,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please provide a value';
+                    }
+                    if (value.length < 10) {
+                      return 'Please enter description with at least 10 symbols';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => {
+                        _editedProduct = Product(
+                            id: null,
+                            title: _editedProduct.title,
+                            price: _editedProduct.price,
+                            description: value,
+                            imageUrl: _editedProduct.imageUrl)
+                      }),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -78,28 +171,32 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
                     height: 100,
                     margin: EdgeInsets.only(top: 8, right: 10),
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 1,
-                        color: Colors.grey
-                      ),
+                      border: Border.all(width: 1, color: Colors.grey),
                     ),
-                    child: _imageUrlController.text.isEmpty 
-                      ? Text('Enter image URL') 
-                      : FittedBox(
-                        child: Image.network(
-                          _imageUrlController.text,
-                          fit: BoxFit.cover
-                        ),
-                      ),
+                    child: _imageUrlController.text.isEmpty
+                        ? Text('Enter image URL')
+                        : FittedBox(
+                            child: Image.network(_imageUrlController.text,
+                                fit: BoxFit.cover),
+                          ),
                   ),
                   Expanded(
                     child: TextFormField(
-                      decoration: InputDecoration(labelText: 'Image URL'),
-                      keyboardType: TextInputType.url,
-                      textInputAction: TextInputAction.done,
-                      controller: _imageUrlController,
-                      focusNode: _imageUrlFocusNode,
-                    ),
+                        decoration: InputDecoration(labelText: 'Image URL'),
+                        keyboardType: TextInputType.url,
+                        textInputAction: TextInputAction.done,
+                        controller: _imageUrlController,
+                        focusNode: _imageUrlFocusNode,
+                        onFieldSubmitted: (_) => _saveForm(),
+                        validator: (value) => getImageValidateError(value),
+                        onSaved: (value) => {
+                              _editedProduct = Product(
+                                  id: null,
+                                  title: _editedProduct.title,
+                                  price: _editedProduct.price,
+                                  description: _editedProduct.description,
+                                  imageUrl: value)
+                            }),
                   )
                 ],
               )
