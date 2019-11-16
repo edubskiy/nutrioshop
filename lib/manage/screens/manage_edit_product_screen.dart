@@ -24,12 +24,6 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
       imageUrl: '',
       price: 0,
   );
-  // var _initValues = {
-  //   'title': '',
-  //   'description': '',
-  //   'price': '',
-  //   'imageUrl': ''
-  // };
   var _isInited = false;
 
   void initState() {
@@ -45,12 +39,6 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
 
       if (productId != null) {
         _editedProduct = Provider.of<Products>(context, listen: false).findById(productId);
-        // _initValues = {
-        //   'title': _editedProduct.title,
-        //   'description': _editedProduct.description,
-        //   'price': _editedProduct.price.toString(),
-        //   'imageUrl': ''
-        // };
         _imageUrlController.text = _editedProduct.imageUrl;
       }
     }
@@ -131,7 +119,6 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
             children: <Widget>[
               TextFormField(
                 initialValue: _editedProduct.title,
-                // initialValue: _initValues['title'],
                 decoration: InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
@@ -156,7 +143,6 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
               ),
               TextFormField(
                 initialValue: _editedProduct.price.toString(),
-                // initialValue: _initValues['price'],
                 decoration: InputDecoration(labelText: 'Price'),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
@@ -189,7 +175,6 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
               ),
               TextFormField(
                 initialValue: _editedProduct.description,
-                // initialValue: _initValues['description'],
                 decoration: InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 focusNode: _descriptionFocusNode,
