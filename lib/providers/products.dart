@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:nutrioshop/dummy_data.dart';
-import 'package:nutrioshop/manage/screens/manage_edit_product_screen.dart';
 import 'package:nutrioshop/models/product.dart';
 
 class Products with ChangeNotifier {
@@ -18,7 +17,7 @@ class Products with ChangeNotifier {
     return _items.firstWhere((item) => item.id == id);
   }
 
-  void addProduct(MutableProduct product) {
+  void addProduct(Product product) {
     final newProduct = Product(
       id: DateTime.now().toString(),
       title: product.title,
@@ -29,5 +28,18 @@ class Products with ChangeNotifier {
 
     _items.add(newProduct);
     notifyListeners();
+  }
+
+  void updateProduct(String id, Product newProduct) {
+    final productIndex = _items.indexWhere((product) => product.id == id);
+    if (productIndex >= 0) {
+      _items[productIndex] = newProduct;
+      notifyListeners();
+    }
+  }
+
+  void deleteProduct(String id) {
+    _items.removeWhere((product) => product.id == id);
+    notifyListeners(); 
   }
 }
