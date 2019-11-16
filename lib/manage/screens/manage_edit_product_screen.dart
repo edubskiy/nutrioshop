@@ -59,12 +59,17 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
   }
 
   String getImageValidateError(value) {
+    // var urlPattern = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/;
+    var urlPattern = r"(https?|ftp)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?";
+    var result = new RegExp(urlPattern, caseSensitive: false).firstMatch(value);
+
     if (value.isEmpty) {
       return 'Please provide a value';
     }
-    if ( ! value.startsWith('http') && ! value.startsWith('https')) {
+    if (result == null) {
       return 'Please enter a valid image url';
     }
+
     return null;
   }
 
