@@ -20,7 +20,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) {
-    const url = 'https://nutrio-shop.firebaseio.com/products.json';
+    const url = 'https://nutrio-shop.firebaseio.com/products';
     
     return http
       .post(url, body: json.encode({
@@ -40,6 +40,10 @@ class Products with ChangeNotifier {
 
         _items.add(newProduct);
         notifyListeners();
+      })
+      .catchError((error) {
+        print(error);
+        throw(error);
       });
   }
 

@@ -70,9 +70,8 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
 
   void _saveForm() {
     final isValid = _form.currentState.validate();
-    Future request;
 
-    if (!isValid) return;
+    if ( ! isValid) return;
 
     final productsProvider = Provider.of<Products>(context, listen: false);
 
@@ -85,7 +84,24 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
     } else {
       productsProvider
         .addProduct(_editedProduct)
+        .catchError((error) {
+          return showDialog(
+            context: context,
+            builder: (dialogContext) => AlertDialog(
+              title: Text('An error occured'),
+              content: Text('Something went wrong'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Okay'), 
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  })
+              ],
+            )
+          );
+        })
         .then((_) {
+          print('setting loading to false, popping');
           setState(() { _isLoading = false; });
           Navigator.of(context).pop();
         });
