@@ -19,9 +19,10 @@ class Products with ChangeNotifier {
     return _items.firstWhere((item) => item.id == id);
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     const url = 'https://nutrio-shop.firebaseio.com/products.json';
-    http
+    
+    return http
       .post(url, body: json.encode({
         'title': product.title,
         'description': product.description,
@@ -29,7 +30,6 @@ class Products with ChangeNotifier {
         'isFavorite': product.isFavorite
       }))
       .then((response) {
-        print(response);
         final newProduct = Product(
           id: json.decode(response.body)['name'],
           title: product.title,
