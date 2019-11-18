@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrioshop/providers/cart.dart';
+import 'package:nutrioshop/providers/products.dart';
 import 'package:nutrioshop/screens/cart_screen.dart';
 import 'package:nutrioshop/widgets/app_drawer.dart';
 import 'package:nutrioshop/widgets/badge.dart';
@@ -18,6 +19,19 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showFavoritesOnly = false;
+  bool _isInited = false;
+  bool _isLoading = false;
+
+  @override
+  void didChangeDependencies() async {
+    if ( ! _isInited) {
+      setState(() => _isLoading = true);
+      await Provider.of<Products>(context).fetchAndSetProducts();
+      setState(() => _isLoading = false);
+    }
+    _isInited = true;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {  
@@ -25,7 +39,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       drawer: AppDrawer(),
       appBar: AppBar(
         title: Text('Nutrio shop'),
-        
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) => {
@@ -59,7 +72,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             ),),
         ],
       ),
-      body: ProductsGrid(_showFavoritesOnly),
+      body: _isLoading 
+        ? Center(child: CircularProgressIndicator()) 
+        : ProductsGrid(_showFavoritesOnly),
     );
   }
 }
