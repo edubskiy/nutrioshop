@@ -92,7 +92,17 @@ class Products with ChangeNotifier {
   }
 
   void deleteProduct(String id) {
-    _items.removeWhere((product) => product.id == id);
+    final url = 'https://nutrio-shop.firebaseio.com/products/$id.json';
+    final productIndex = _items.indexWhere((product) => product.id == id);
+    Product cachedProduct = _items[productIndex];
+    
+    _items.removeAt(productIndex);
+
+    http
+      .delete(url)
+      .then((_) => cachedProduct = null)
+      .catchError((_) => _items.insert(productIndex, cachedProduct));
+
     notifyListeners();
   }
 }
