@@ -92,25 +92,20 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
+  Future<void> deleteProduct(String id) async {
     final url = 'https://nutrio-shop.firebaseio.com/products/$id.json';
     final productIndex = _items.indexWhere((product) => product.id == id);
     Product cachedProduct = _items[productIndex];
     
-    http
-      .delete(url)
-      .then((response) {
-        if (response.statusCode >= 400) {
-          throw HTTPException("Items was not deleted");
-        }
-        cachedProduct = null;
-      })
-      .catchError((_) {
-        _items.insert(productIndex, cachedProduct);
-        notifyListeners();
-      });
-
     _items.removeAt(productIndex);
     notifyListeners();
+    
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(productIndex, cachedProduct);
+      notifyListeners();
+      throw HTTPException("Items was not deleted");
+    }
+    cachedProduct = null;
   }
 }
