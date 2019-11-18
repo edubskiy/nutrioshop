@@ -39,7 +39,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       drawer: AppDrawer(),
       appBar: AppBar(
         title: Text('Nutrio shop'),
-        
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) => {
@@ -74,8 +73,8 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       body: _isLoading 
-      ? Center(child: CircularProgressIndicator()) 
-      : ProductsGrid(_showFavoritesOnly),
+        ? Center(child: CircularProgressIndicator()) 
+        : ProductsGrid(_showFavoritesOnly),
     );
   }
 }
