@@ -19,16 +19,18 @@ class Products with ChangeNotifier {
     return _items.firstWhere((item) => item.id == id);
   }
 
-  Future<void> addProduct(Product product) {
+  Future<void> addProduct(Product product) async {
     const url = 'https://nutrio-shop.firebaseio.com/products.json';
-    
-    return http
-      .post(url, body: json.encode({
-        'title': product.title,
-        'description': product.description,
-        'imageUrl': product.imageUrl,
-        'isFavorite': product.isFavorite
-      }))
+    final requestParams = {
+      'title': product.title,
+      'description': product.description,
+      'imageUrl': product.imageUrl,
+      'isFavorite': product.isFavorite
+    };
+
+    try {
+      return await http
+      .post(url, body: json.encode(requestParams))
       .then((response) {
         final newProduct = Product(
           id: json.decode(response.body)['name'],
@@ -40,11 +42,11 @@ class Products with ChangeNotifier {
 
         _items.add(newProduct);
         notifyListeners();
-      })
-      .catchError((error) {
-        print(error);
-        throw(error);
       });
+    } catch(error) {
+      print(error);
+      throw(error);
+    }
   }
 
   void updateProduct(String id, Product newProduct) {
