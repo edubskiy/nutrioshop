@@ -29,20 +29,17 @@ class Products with ChangeNotifier {
     };
 
     try {
-      return await http
-      .post(url, body: json.encode(requestParams))
-      .then((response) {
-        final newProduct = Product(
-          id: json.decode(response.body)['name'],
-          title: product.title,
-          price: product.price,
-          description: product.description,
-          imageUrl: product.imageUrl
-        );
+      final response =  await http.post(url, body: json.encode(requestParams));
+      final newProduct = Product(
+        id: json.decode(response.body)['name'],
+        title: product.title,
+        price: product.price,
+        description: product.description,
+        imageUrl: product.imageUrl
+      );
 
-        _items.add(newProduct);
-        notifyListeners();
-      });
+      _items.add(newProduct);
+      notifyListeners();
     } catch(error) {
       print(error);
       throw(error);
