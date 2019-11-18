@@ -68,7 +68,7 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
     }
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     final isValid = _form.currentState.validate();
 
     if ( ! isValid) return;
@@ -82,29 +82,27 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
       productsProvider.updateProduct(_editedProduct.id, _editedProduct);
       Navigator.of(context).pop();
     } else {
-      productsProvider
-        .addProduct(_editedProduct)
-        .catchError((error) {
-          return showDialog(
-            context: context,
-            builder: (dialogContext) => AlertDialog(
-              title: Text('An error occured'),
-              content: Text('Something went wrong'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Okay'), 
-                  onPressed: () {
-                    Navigator.of(dialogContext).pop();
-                  })
-              ],
-            )
-          );
-        })
-        .then((_) {
-          print('setting loading to false, popping');
-          setState(() { _isLoading = false; });
-          Navigator.of(context).pop();
-        });
+      try {
+        await productsProvider.addProduct(_editedProduct);
+      } catch(error) {
+        showDialog(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: Text('An error occured'),
+            content: Text('Something went wrong'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'), 
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                })
+            ],
+          )
+        );
+      } finally {
+        setState(() { _isLoading = false; });
+        Navigator.of(context).pop();
+      }
     }
   }
 
@@ -224,7 +222,6 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
                   )
                 }
               ),
-              // ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -244,7 +241,6 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
                   ),
                   Expanded(
                     child: TextFormField(
-                      // initialValue: _editedProduct.imageUrl,
                       decoration: InputDecoration(labelText: 'Image URL'),
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
