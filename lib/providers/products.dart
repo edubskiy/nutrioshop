@@ -1,14 +1,37 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:nutrioshop/dummy_data.dart';
 import 'package:nutrioshop/models/product.dart';
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  List<Product> _items = dummyProducts;
+  List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
+  }
+
+  Future<void> fetchAndSetProducts() async {
+    const url = 'https://nutrio-shop.firebaseio.com/products.json';
+    try {
+      final response = await http.get(url);
+      final List<Product> loadedProduct = [];
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+
+      extractedData.forEach((productId, product) {
+        loadedProduct.add(Product(
+          id: productId,
+          title: product['title'],
+          price: product['price'],
+          description: product['description'],
+          imageUrl: product['imageUrl'],
+        ));
+      });
+
+      _items = loadedProduct;
+      notifyListeners();
+    } catch (error) {
+      throw(error);
+    }
   }
 
   List<Product> getFavoritesOnly() {
