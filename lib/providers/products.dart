@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:nutrioshop/models/http_exception.dart';
 import 'package:nutrioshop/models/product.dart';
 import 'package:http/http.dart' as http;
 
@@ -96,13 +97,20 @@ class Products with ChangeNotifier {
     final productIndex = _items.indexWhere((product) => product.id == id);
     Product cachedProduct = _items[productIndex];
     
-    _items.removeAt(productIndex);
-
     http
       .delete(url)
-      .then((_) => cachedProduct = null)
-      .catchError((_) => _items.insert(productIndex, cachedProduct));
+      .then((response) {
+        if (response.statusCode >= 400) {
+          throw HTTPException("Items was not deleted");
+        }
+        cachedProduct = null;
+      })
+      .catchError((_) {
+        _items.insert(productIndex, cachedProduct);
+        notifyListeners();
+      });
 
+    _items.removeAt(productIndex);
     notifyListeners();
   }
 }
