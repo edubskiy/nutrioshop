@@ -222,7 +222,6 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
                   )
                 }
               ),
-              // ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -242,7 +241,6 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
                   ),
                   Expanded(
                     child: TextFormField(
-                      // initialValue: _editedProduct.imageUrl,
                       decoration: InputDecoration(labelText: 'Image URL'),
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
