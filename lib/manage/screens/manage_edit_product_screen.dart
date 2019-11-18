@@ -76,11 +76,10 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
     final productsProvider = Provider.of<Products>(context, listen: false);
 
     _form.currentState.save();
-    setState(() { _isLoading = true; });
+    setState(() => _isLoading = true);
     
     if (_editedProduct.id != null) {
-      productsProvider.updateProduct(_editedProduct.id, _editedProduct);
-      Navigator.of(context).pop();
+      await productsProvider.updateProduct(_editedProduct.id, _editedProduct);
     } else {
       try {
         await productsProvider.addProduct(_editedProduct);
@@ -99,11 +98,11 @@ class _ManageEditProductScreenState extends State<ManageEditProductScreen> {
             ],
           )
         );
-      } finally {
-        setState(() { _isLoading = false; });
-        Navigator.of(context).pop();
       }
     }
+    
+    setState(() => _isLoading = false);
+    Navigator.of(context).pop();
   }
 
   String getImageValidateError(value) {

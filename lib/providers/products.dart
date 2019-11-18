@@ -69,9 +69,23 @@ class Products with ChangeNotifier {
     }
   }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
+    final url = 'https://nutrio-shop.firebaseio.com/products/$id.json';
+    final requestParams = {
+      'title': newProduct.title,
+      'description': newProduct.description,
+      'imageUrl': newProduct.imageUrl,
+      'price': newProduct.price
+    };
+
     final productIndex = _items.indexWhere((product) => product.id == id);
+
     if (productIndex >= 0) {
+      try {
+        await http.patch(url, body: json.encode(requestParams));
+      } catch(error) {
+        throw(error);
+      }
       _items[productIndex] = newProduct;
       notifyListeners();
     }
