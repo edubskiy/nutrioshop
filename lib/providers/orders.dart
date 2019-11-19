@@ -23,6 +23,39 @@ class Orders with ChangeNotifier {
 
   List<OrderItem> get orders => [..._orders];
 
+  Future<void> fetchAndSetProducts() async {
+    const url = 'https://nutrio-shop.firebaseio.com/orders.json';
+    try {
+      final response = await http.get(url);
+      final List<OrderItem> loadedOrders = [];
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+
+      if (extractedData == null) return;
+
+      extractedData.forEach((orderId, order) {
+        loadedOrders.add(OrderItem(
+          id: orderId,
+          amount: order['amount'],
+          dateTime: DateTime.parse(order['dateTime']),
+          products: (order['products'] as List<dynamic>)
+            .map((item) => CartItem(
+              id: item['id'],
+              price: item['price'],
+              quantity: item['quantity'],
+              title: item['title']
+            ))
+            .toList()
+        ));
+      });
+
+      _orders = loadedOrders.reversed.toList();
+      notifyListeners();
+
+    } catch (error) {
+      throw(error);
+    }
+  }
+
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     const url = 'https://nutrio-shop.firebaseio.com/orders.json';
     DateTime currentTime = DateTime.now();
