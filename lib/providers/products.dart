@@ -106,6 +106,6 @@ class Products with ChangeNotifier {
       notifyListeners();
       throw HTTPException("Items was not deleted");
     }
-    cachedProduct = null;
+    cachedProduct = null;  
   }
 }
