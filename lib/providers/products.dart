@@ -18,6 +18,8 @@ class Products with ChangeNotifier {
       final List<Product> loadedProduct = [];
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
 
+      if (extractedData == null) return;
+
       extractedData.forEach((productId, product) {
         loadedProduct.add(Product(
           id: productId,
@@ -25,6 +27,7 @@ class Products with ChangeNotifier {
           price: product['price'],
           description: product['description'],
           imageUrl: product['imageUrl'],
+          isFavorite: product['isFavorite']
         ));
       });
 
@@ -76,7 +79,8 @@ class Products with ChangeNotifier {
       'title': newProduct.title,
       'description': newProduct.description,
       'imageUrl': newProduct.imageUrl,
-      'price': newProduct.price
+      'price': newProduct.price,
+      'isFavorite': newProduct.isFavorite
     };
 
     final productIndex = _items.indexWhere((product) => product.id == id);
@@ -106,6 +110,6 @@ class Products with ChangeNotifier {
       notifyListeners();
       throw HTTPException("Items was not deleted");
     }
-    cachedProduct = null;
+    cachedProduct = null;  
   }
 }
