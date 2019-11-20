@@ -20,23 +20,29 @@ class Product with ChangeNotifier {
     this.isFavorite = false
   });
 
-  Future<void> toggleFavoriteStatus() async {
+  void _setFavoriteStatus(value) {
+    isFavorite = value;
+    notifyListeners();
+  }
+
+  Future<void> toggleFavoriteStatus() async { // optimistic update
     final url = 'https://nutrio-shop.firebaseio.com/products/$id.json';
-    final cachedIsFavorite = isFavorite;
+    final cachedFavoriteStatus = isFavorite;
     
     isFavorite = ! isFavorite;
     notifyListeners();
 
     try {
-      await http.patch(
-        url, 
-        body: json.encode({ 
-          'isFavorite': isFavorite 
-        })
-      );
+      final response = await http.patch(url, body: json.encode({  'isFavorite': isFavorite }));
+
+      // for patch and delete requests we don't reach catch(error) method,
+      // instead we have to manually read and react to bad status here
+      if (response.statusCode >= 400) {
+        _setFavoriteStatus(cachedFavoriteStatus);
+      }
+
     } catch (e) {
-      isFavorite = cachedIsFavorite;
-      notifyListeners();
+      _setFavoriteStatus(cachedFavoriteStatus);
     }
   }
 }
