@@ -20,14 +20,14 @@ class Product with ChangeNotifier {
     this.isFavorite = false
   });
 
-  void _setFavoriteValue(value) {
+  void _setFavoriteStatus(value) {
     isFavorite = value;
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus() async { // optimistic update
     final url = 'https://nutrio-shop.firebaseio.com/products/$id.json';
-    final cachedIsFavorite = isFavorite;
+    final cachedFavoriteStatus = isFavorite;
     
     isFavorite = ! isFavorite;
     notifyListeners();
@@ -38,11 +38,11 @@ class Product with ChangeNotifier {
       // for patch and delete requests we don't reach catch(error) method,
       // instead we have to manually read and react to bad status here
       if (response.statusCode >= 400) {
-        _setFavoriteValue(cachedIsFavorite);
+        _setFavoriteStatus(cachedFavoriteStatus);
       }
 
     } catch (e) {
-      _setFavoriteValue(cachedIsFavorite);
+      _setFavoriteStatus(cachedFavoriteStatus);
     }
   }
 }
