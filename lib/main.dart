@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:nutrioshop/manage/screens/manage_edit_product_screen.dart';
+import 'package:nutrioshop/providers/auth.dart';
 import 'package:nutrioshop/providers/cart.dart';
 import 'package:nutrioshop/providers/orders.dart';
 import 'package:nutrioshop/providers/products.dart';
+import 'package:nutrioshop/screens/auth_screen.dart';
 import 'package:nutrioshop/screens/cart_screen.dart';
 import 'package:nutrioshop/screens/orders_screen.dart';
 import 'package:nutrioshop/screens/product_details_screen.dart';
-import 'package:nutrioshop/screens/products_overview_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'manage/screens/manage_products_screen.dart';
@@ -20,6 +21,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: Auth()),
         ChangeNotifierProvider.value(value: Products()),
         ChangeNotifierProvider.value(value: Cart()),
         ChangeNotifierProvider.value(value: Orders()),
@@ -32,7 +34,7 @@ class App extends StatelessWidget {
           accentColor: Colors.tealAccent,
           fontFamily: 'Lato'
         ),
-        home: ProductsOverviewScreen(),
+        home: AuthScreen(),
         routes: {
           ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
