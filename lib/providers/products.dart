@@ -6,13 +6,16 @@ import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
   List<Product> _items = [];
+  String token;
+
+  Products(this.token, this._items);
 
   List<Product> get items {
     return [..._items];
   }
 
   Future<void> fetchAndSetProducts() async {
-    const url = 'https://nutrio-shop.firebaseio.com/products.json';
+    final url = 'https://nutrio-shop.firebaseio.com/products.json?auth=$token';
     try {
       final response = await http.get(url);
       final List<Product> loadedProduct = [];
