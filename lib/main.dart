@@ -8,6 +8,7 @@ import 'package:nutrioshop/screens/auth_screen.dart';
 import 'package:nutrioshop/screens/cart_screen.dart';
 import 'package:nutrioshop/screens/orders_screen.dart';
 import 'package:nutrioshop/screens/product_details_screen.dart';
+import 'package:nutrioshop/screens/products_overview_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'manage/screens/manage_products_screen.dart';
@@ -22,27 +23,36 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: Auth()),
-        ChangeNotifierProvider.value(value: Products()),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          builder: (ctx, auth, previousProducts) => Products(
+            auth.token,
+            previousProducts == null ? [] : previousProducts.items
+          ), 
+        ),
         ChangeNotifierProvider.value(value: Cart()),
         ChangeNotifierProvider.value(value: Orders()),
       ],
-      child: MaterialApp(
-        title: 'Nutrio shop',
-        // theme: ThemeData.dark(),
-        theme: ThemeData(
-          primarySwatch: Colors.teal,
-          accentColor: Colors.tealAccent,
-          fontFamily: 'Lato'
-        ),
-        home: AuthScreen(),
-        routes: {
-          ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
-          CartScreen.routeName: (ctx) => CartScreen(),
-          OrdersScreen.routeName: (ctx) => OrdersScreen(),
-          ManageProductsScreen.routeName: (ctx) => ManageProductsScreen(),
-          ManageEditProductScreen.routeName: (ctx) => ManageEditProductScreen(),
-        },
-      )
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) => MaterialApp(
+          title: 'Nutrio shop',
+          // theme: ThemeData.dark(),
+          theme: ThemeData(
+            primarySwatch: Colors.teal,
+            accentColor: Colors.tealAccent,
+            fontFamily: 'Lato'
+          ),
+          home: auth.isAuth 
+            ? ProductsOverviewScreen() 
+            : AuthScreen(),
+          routes: {
+            ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
+            CartScreen.routeName: (ctx) => CartScreen(),
+            OrdersScreen.routeName: (ctx) => OrdersScreen(),
+            ManageProductsScreen.routeName: (ctx) => ManageProductsScreen(),
+            ManageEditProductScreen.routeName: (ctx) => ManageEditProductScreen(),
+          },
+        )
+      ) 
     );
   }
 }
