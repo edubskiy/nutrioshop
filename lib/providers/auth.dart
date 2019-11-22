@@ -5,9 +5,22 @@ import 'package:http/http.dart' as http;
 import 'package:nutrioshop/models/http_exception.dart';
 
 class Auth with ChangeNotifier {
-  // String _token;
-  // DateTime _expiryDate;
-  // String _userId;
+  String _token;
+  DateTime _expiryDate;
+  String _userId;
+
+  bool get isAuth {
+    return _token != null;
+  }
+
+  String get token {
+    if (_expiryDate != null && 
+        _expiryDate.isAfter(DateTime.now()) &&
+        _token != null)  {
+      return _token;
+    }
+    return null;
+  }
 
   Future<void> _authentificate(String email, String password, String urlSegment) async {
     final url = 'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyDDRH9W5W96qD9oNlY4BH3zdO679ZYlkno';
@@ -25,8 +38,14 @@ class Auth with ChangeNotifier {
         throw HTTPException(responseData['error']['message']);
       }
 
-      print('response from $urlSegment');
-      print(json.decode(response.body));
+      _token = responseData['idToken'];
+      _userId = responseData['localId'];
+      _expiryDate = DateTime.now().add(
+        Duration(
+          seconds: int.parse(responseData['expiresIn'])
+        )
+      );
+      notifyListeners();
     } catch (e) {
       throw(e);
     }
