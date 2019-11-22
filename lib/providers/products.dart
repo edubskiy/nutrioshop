@@ -50,7 +50,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const url = 'https://nutrio-shop.firebaseio.com/products.json';
+    final url = 'https://nutrio-shop.firebaseio.com/products.json?auth=$token';
     final requestParams = {
       'title': product.title,
       'description': product.description,
@@ -77,7 +77,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> updateProduct(String id, Product newProduct) async {
-    final url = 'https://nutrio-shop.firebaseio.com/products/$id.json';
+    final url = 'https://nutrio-shop.firebaseio.com/products/$id.json?auth=$token';
     final requestParams = {
       'title': newProduct.title,
       'description': newProduct.description,
@@ -100,7 +100,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = 'https://nutrio-shop.firebaseio.com/products/$id.json';
+    final url = 'https://nutrio-shop.firebaseio.com/products/$id.json?auth=$token';
     final productIndex = _items.indexWhere((product) => product.id == id);
     Product cachedProduct = _items[productIndex];
     
