@@ -7,14 +7,15 @@ import 'package:http/http.dart' as http;
 class Products with ChangeNotifier {
   List<Product> _items = [];
   String token;
+  String userId;
 
-  Products(this.token, this._items);
+  Products(this.token, this.userId, this._items);
 
   List<Product> get items {
     return [..._items];
   }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts(String userId) async {
     final url = 'https://nutrio-shop.firebaseio.com/products.json?auth=$token';
     try {
       final response = await http.get(url);
@@ -23,14 +24,17 @@ class Products with ChangeNotifier {
 
       if (extractedData == null) return;
 
+      final favoritesResponse = await http.get('https://nutrio-shop.firebaseio.com/favorites/$userId?auth=$token');
+      final favoriteData = json.decode(favoritesResponse.body);
+
       extractedData.forEach((productId, product) {
         loadedProduct.add(Product(
           id: productId,
           title: product['title'],
           price: product['price'],
           description: product['description'],
-          imageUrl: product['imageUrl'],
-          isFavorite: product['isFavorite']
+          isFavorite: favoriteData == null ? false : favoriteData[productId] ?? false,
+          imageUrl: product['imageUrl']
         ));
       });
 
@@ -55,8 +59,7 @@ class Products with ChangeNotifier {
       'title': product.title,
       'description': product.description,
       'imageUrl': product.imageUrl,
-      'price': product.price,
-      'isFavorite': product.isFavorite
+      'price': product.price
     };
 
     try {
