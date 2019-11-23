@@ -19,12 +19,16 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
+  final String token;
+  
   List<OrderItem> _orders = [];
-
+  
+  Orders(this.token, this._orders);
+  
   List<OrderItem> get orders => [..._orders];
 
-  Future<void> fetchAndSetProducts() async {
-    const url = 'https://nutrio-shop.firebaseio.com/orders.json';
+  Future<void> fetchAndSetOrders() async {
+    final url = 'https://nutrio-shop.firebaseio.com/orders.json?auth=$token';
     try {
       final response = await http.get(url);
       final List<OrderItem> loadedOrders = [];
@@ -49,15 +53,15 @@ class Orders with ChangeNotifier {
       });
 
       _orders = loadedOrders.reversed.toList();
-      notifyListeners();
 
+      notifyListeners();
     } catch (error) {
       throw(error);
     }
   }
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
-    const url = 'https://nutrio-shop.firebaseio.com/orders.json';
+    final url = 'https://nutrio-shop.firebaseio.com/orders.json?auth=$token';
     DateTime currentTime = DateTime.now();
     final requestParams = {
       'amount': total,
