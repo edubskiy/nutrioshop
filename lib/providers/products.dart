@@ -15,7 +15,7 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> fetchAndSetProducts(String userId) async {
+  Future<void> fetchAndSetProducts() async {
     final url = 'https://nutrio-shop.firebaseio.com/products.json?auth=$token';
     try {
       final response = await http.get(url);
@@ -24,7 +24,7 @@ class Products with ChangeNotifier {
 
       if (extractedData == null) return;
 
-      final favoritesResponse = await http.get('https://nutrio-shop.firebaseio.com/favorites/$userId?auth=$token');
+      final favoritesResponse = await http.get('https://nutrio-shop.firebaseio.com/favorites/$userId.json?auth=$token');
       final favoriteData = json.decode(favoritesResponse.body);
 
       extractedData.forEach((productId, product) {
