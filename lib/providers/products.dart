@@ -15,8 +15,9 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> fetchAndSetProducts() async {
-    final url = 'https://nutrio-shop.firebaseio.com/products.json?auth=$token';
+  Future<void> fetchAndSetProducts([ bool filterByUser = false ]) async {
+    final filterString = filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    final url = 'https://nutrio-shop.firebaseio.com/products.json?auth=$token&$filterString';
     try {
       final response = await http.get(url);
       final List<Product> loadedProduct = [];
@@ -24,7 +25,8 @@ class Products with ChangeNotifier {
 
       if (extractedData == null) return;
 
-      final favoritesResponse = await http.get('https://nutrio-shop.firebaseio.com/favorites/$userId.json?auth=$token');
+      final favoritesURL = 'https://nutrio-shop.firebaseio.com/favorites/$userId.json?auth=$token';
+      final favoritesResponse = await http.get(favoritesURL);
       final favoriteData = json.decode(favoritesResponse.body);
 
       extractedData.forEach((productId, product) {
@@ -59,7 +61,8 @@ class Products with ChangeNotifier {
       'title': product.title,
       'description': product.description,
       'imageUrl': product.imageUrl,
-      'price': product.price
+      'price': product.price,
+      'creatorId': userId
     };
 
     try {
