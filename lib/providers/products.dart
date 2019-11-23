@@ -55,6 +55,7 @@ class Products with ChangeNotifier {
       'title': product.title,
       'description': product.description,
       'imageUrl': product.imageUrl,
+      'price': product.price,
       'isFavorite': product.isFavorite
     };
 
