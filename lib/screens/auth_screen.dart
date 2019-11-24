@@ -120,6 +120,12 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
     _heightAnimation.addListener(() => setState(() {}));
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _showErrorDialog(String message) {
     showDialog(context: context, builder: (_) => AlertDialog(
       content: Text(message),
