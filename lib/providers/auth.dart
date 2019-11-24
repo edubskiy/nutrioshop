@@ -26,6 +26,14 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  void logout() {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+
+    notifyListeners();
+  }
+
   Future<void> _authentificate(String email, String password, String urlSegment) async {
     final url = 'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyDDRH9W5W96qD9oNlY4BH3zdO679ZYlkno';
 

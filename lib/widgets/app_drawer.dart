@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nutrioshop/manage/screens/manage_products_screen.dart';
+import 'package:nutrioshop/providers/auth.dart';
 import 'package:nutrioshop/screens/orders_screen.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   Widget buildListTile(String title, IconData icon, Function onTap) {
@@ -42,7 +44,15 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.edit),
             title: Text('Manage Products'),
             onTap: () => Navigator.of(context).pushReplacementNamed(ManageProductsScreen.routeName),
-          )
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: () {
+              Provider.of<Auth>(context, listen: false).logout();
+            },
+          ),
         ],
       ),
     );
