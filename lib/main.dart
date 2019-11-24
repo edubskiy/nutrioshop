@@ -9,6 +9,7 @@ import 'package:nutrioshop/screens/cart_screen.dart';
 import 'package:nutrioshop/screens/orders_screen.dart';
 import 'package:nutrioshop/screens/product_details_screen.dart';
 import 'package:nutrioshop/screens/products_overview_screen.dart';
+import 'package:nutrioshop/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'manage/screens/manage_products_screen.dart';
@@ -24,21 +25,23 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: Auth()),
         ChangeNotifierProxyProvider<Auth, Products>(
-          builder: (ctx, auth, previousProducts) => Products(
-            auth.token,
-            auth.userId,
-            previousProducts.items
-          ),
-          initialBuilder: (_) => Products('', '',[]),
+          builder: (ctx, auth, previousProducts) {
+            return Products(
+              auth.token,
+              auth.userId,
+              previousProducts == null ? [] : previousProducts.items
+            );
+          },
+          // initialBuilder: (_) => Products('', '',[]),
         ),
         ChangeNotifierProvider.value(value: Cart()),
         ChangeNotifierProxyProvider<Auth, Orders>(
           builder: (ctx, auth, previousOrders) => Orders(
             auth.token,
             auth.userId,
-            previousOrders.orders
+            previousOrders == null ? [] : previousOrders.orders
           ),
-          initialBuilder: (_) => Orders('', '', []),
+          // initialBuilder: (_) => Orders('', '', []),
         ),
       ],
       child: Consumer<Auth>(
@@ -52,7 +55,16 @@ class App extends StatelessWidget {
           ),
           home: auth.isAuth 
             ? ProductsOverviewScreen() 
-            : AuthScreen(),
+            : FutureBuilder(
+              future: auth.tryAutoLogin(),
+              builder: (ctx, snapshot) {
+                print('snapshot');
+                print(snapshot.connectionState);
+                return snapshot.connectionState == ConnectionState.waiting 
+                  ? SplashScreen()
+                  : AuthScreen();
+              }
+            ),
           routes: {
             ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
             CartScreen.routeName: (ctx) => CartScreen(),
