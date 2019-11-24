@@ -151,11 +151,9 @@ class _AuthCardState extends State<AuthCard> {
       } else if (error.toString().contains('INVALID_PASSWORD')) {
         errorMessage = 'Invalid password';
       }
-      print(errorMessage);
       _showErrorDialog(errorMessage);
     } catch(error) {
       const errorMessage = 'Could not authenticate you. Please try again later';
-      print(errorMessage);
       _showErrorDialog(errorMessage);
     }
 

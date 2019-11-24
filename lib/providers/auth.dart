@@ -29,7 +29,7 @@ class Auth with ChangeNotifier {
     return null;
   }
 
-  void logout() {
+  void logout() async {
     _token = null;
     _userId = null;
     _expiryDate = null;
@@ -37,8 +37,9 @@ class Auth with ChangeNotifier {
       _timer.cancel();
       _timer = null;
     }
-
     notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   void _autoLogout() {
@@ -80,7 +81,7 @@ class Auth with ChangeNotifier {
       final userData = json.encode({
         'token': _token, 
         'userId': _userId, 
-        'expiryDate': _expiryDate
+        'expiryDate': _expiryDate.toIso8601String()
       });
       prefs.setString('userData', userData);
 
@@ -100,9 +101,11 @@ class Auth with ChangeNotifier {
 
   Future<bool> tryAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
+
     if ( ! prefs.containsKey('userData')) {
       return false;
     }
+
     final extractedUserData = json.decode(prefs.getString('userData')) as Map<String, Object>;
     final expiryData = DateTime.parse(extractedUserData['expiryDate']);
 
@@ -115,7 +118,7 @@ class Auth with ChangeNotifier {
     _expiryDate = expiryData;
     _autoLogout();
     notifyListeners();
-    
+
     return true;
   }
 }
