@@ -20,15 +20,16 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   final String token;
+  final String userId;
   
   List<OrderItem> _orders = [];
   
-  Orders(this.token, this._orders);
+  Orders(this.token, this.userId, this._orders);
   
   List<OrderItem> get orders => [..._orders];
 
   Future<void> fetchAndSetOrders() async {
-    final url = 'https://nutrio-shop.firebaseio.com/orders.json?auth=$token';
+    final url = 'https://nutrio-shop.firebaseio.com/orders/$userId.json?auth=$token';
     try {
       final response = await http.get(url);
       final List<OrderItem> loadedOrders = [];
@@ -61,7 +62,7 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
-    final url = 'https://nutrio-shop.firebaseio.com/orders.json?auth=$token';
+    final url = 'https://nutrio-shop.firebaseio.com/orders/$userId.json?auth=$token';
     DateTime currentTime = DateTime.now();
     final requestParams = {
       'amount': total,

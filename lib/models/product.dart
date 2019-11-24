@@ -25,17 +25,15 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus(String token) async { // optimistic update
-    final url = 'https://nutrio-shop.firebaseio.com/products/$id.json?auth=$token';
+  Future<void> toggleFavoriteStatus(String token, String userId) async { // optimistic update
+    final url = 'https://nutrio-shop.firebaseio.com/favorites/$userId/$id.json?auth=$token';
     final cachedFavoriteStatus = isFavorite;
     
     isFavorite = ! isFavorite;
     notifyListeners();
 
     try {
-      final response = await http.patch(url, body: json.encode({ 
-        'isFavorite': isFavorite 
-      }));
+      final response = await http.put(url, body: json.encode(isFavorite));
 
       // for patch and delete requests we don't reach catch(error) method,
       // instead we have to manually read and react to bad status here
