@@ -117,7 +117,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
       end: Size(double.infinity, 320)
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
-    _heightAnimation.addListener(() => setState(() {}));
+    // _heightAnimation.addListener(() => setState(() {}));
   }
 
   @override
@@ -207,13 +207,17 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 8.0,
-      child: Container(
-        height: _heightAnimation.value.height,
-        // height: _authMode == AuthMode.Signup ? 320 : 260,
-        constraints:
-            BoxConstraints(minHeight: _heightAnimation.value.height),
-        width: deviceSize.width * 0.75,
-        padding: EdgeInsets.all(16.0),
+      child: AnimatedBuilder( // only rebuild Container height, not rebuilding Form widget at all
+        animation: _heightAnimation,
+        builder: (ctx, formChild) => Container(
+          height: _heightAnimation.value.height,
+          // height: _authMode == AuthMode.Signup ? 320 : 260,
+          constraints:
+              BoxConstraints(minHeight: _heightAnimation.value.height),
+          width: deviceSize.width * 0.75,
+          padding: EdgeInsets.all(16.0),
+          child: formChild
+        ),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -289,8 +293,8 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
               ],
             ),
           ),
-        ),
-      ),
+        )
+      ) 
     );
   }
 }
