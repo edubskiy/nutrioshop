@@ -12,6 +12,7 @@ import 'package:nutrioshop/screens/products_overview_screen.dart';
 import 'package:nutrioshop/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'helpers/custom_route.dart';
 import 'manage/screens/manage_products_screen.dart';
 
 main() {
@@ -51,7 +52,13 @@ class App extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.teal,
             accentColor: Colors.tealAccent,
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            pageTransitionsTheme: PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: CustomPageTransitionBuilder(),
+                TargetPlatform.iOS: CustomPageTransitionBuilder()
+              }
+            ),
           ),
           home: auth.isAuth 
             ? ProductsOverviewScreen() 
