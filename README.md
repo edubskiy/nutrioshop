@@ -1,2 +1,8 @@
-# nutri-shop
-Buy some tasty and healthy food
+# ShoppinGauze
+Addictive shopping
+- items catalog
+- favorites
+- cart
+- items manager (add/edit/delete items)
+
+![](assets/preview/app_preview.gif)
